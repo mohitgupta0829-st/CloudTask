@@ -1,8 +1,9 @@
 function Login() {
   return (
-    <div>
-      <h1>CloudTask</h1>
-      <p>Welcome back! Please sign in.</p>
+    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+      <h1 className="text-5xl font-bold text-blue-600">
+        CloudTask 🚀
+      </h1>
     </div>
   );
 }
