@@ -1,7 +1,12 @@
-function Button({ children, type = "button" }) {
+function Button({
+  children,
+  type = "button",
+  onClick,
+}) {
   return (
     <button
       type={type}
+      onClick={onClick}
       className="
       w-full
       rounded-2xl
@@ -11,12 +16,11 @@ function Button({ children, type = "button" }) {
       text-white
       transition
       duration-200
+      hover:bg-[#ff573c]
       hover:-translate-y-0.5
       hover:shadow-lg
-      active:scale-95
-      cursor-pointer
-      hover:bg-[#ff573c]
       active:scale-[0.98]
+      cursor-pointer
       "
     >
       {children}
