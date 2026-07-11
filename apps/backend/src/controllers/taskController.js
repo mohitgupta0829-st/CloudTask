@@ -53,7 +53,58 @@ const getTasks = async (req, res) => {
   }
 };
 
+const updateTask = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { title, completed } = req.body;
+
+    const result = await pool.query(
+      `UPDATE tasks
+       SET title = $1,
+           completed = $2
+       WHERE id = $3
+       RETURNING *`,
+      [title, completed, id]
+    );
+
+    return res.status(200).json({
+      message: "Task updated successfully",
+      task: result.rows[0],
+    });
+
+  } catch (error) {
+    console.error(error);
+
+    return res.status(500).json({
+      message: "Internal Server Error",
+    });
+  }
+};
+const deleteTask = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    await pool.query(
+      "DELETE FROM tasks WHERE id = $1",
+      [id]
+    );
+
+    return res.status(200).json({
+      message: "Task deleted successfully",
+    });
+
+  } catch (error) {
+    console.error(error);
+
+    return res.status(500).json({
+      message: "Internal Server Error",
+    });
+  }
+};
+
 module.exports = {
   createTask,
   getTasks,
+  updateTask,
+  deleteTask,
 };
