@@ -2,10 +2,12 @@ import { useState } from "react";
 import Button from "../components/Button/Button";
 import Input from "../components/Input/Input";
 import api from "../services/api";
+import { useNavigate } from "react-router-dom";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
   const handleLogin = async () => {
     try {
@@ -16,7 +18,10 @@ function Login() {
 
       console.log(response.data);
 
-      alert("Login Successful 🚀");
+      localStorage.setItem("token", response.data.token);
+      console.log(response.data.token);
+      navigate("/dashboard");
+      
     } catch (error) {
       alert(error.response?.data?.message || "Login Failed");
     }
