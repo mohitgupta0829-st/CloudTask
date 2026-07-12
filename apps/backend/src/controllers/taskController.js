@@ -2,7 +2,10 @@ const pool = require("../config/db");
 
 const createTask = async (req, res) => {
   try {
-    const { title, userId } = req.body;
+    console.log("BODY:", req.body);
+    console.log("HEADERS:", req.headers.authorization);
+    const { title } = req.body;
+    const userId = req.user.id;
 
     if (!title || !userId) {
       return res.status(400).json({
@@ -33,7 +36,7 @@ const createTask = async (req, res) => {
 
 const getTasks = async (req, res) => {
   try {
-    const { userId } = req.query;
+    const userId = req.user.id;
 
     const result = await pool.query(
       `SELECT * FROM tasks
@@ -63,8 +66,14 @@ const updateTask = async (req, res) => {
        SET title = $1,
            completed = $2
        WHERE id = $3
+       AND user_id = $4
        RETURNING *`,
-      [title, completed, id]
+      [
+        title,
+        completed,
+        id,
+        req.user.id
+      ]
     );
 
     return res.status(200).json({
@@ -85,8 +94,10 @@ const deleteTask = async (req, res) => {
     const { id } = req.params;
 
     await pool.query(
-      "DELETE FROM tasks WHERE id = $1",
-      [id]
+      `DELETE FROM tasks
+       WHERE id = $1
+       AND user_id = $2`,
+      [id, req.user.id]
     );
 
     return res.status(200).json({

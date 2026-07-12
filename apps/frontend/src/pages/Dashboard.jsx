@@ -11,7 +11,7 @@ function Dashboard() {
 
   const fetchTasks = async () => {
     try {
-      const response = await api.get("/tasks?userId=1");
+      const response = await api.get("/tasks");
       setTasks(response.data);
     } catch (error) {
       console.error(error);
@@ -24,7 +24,6 @@ function Dashboard() {
     try {
       await api.post("/tasks", {
         title,
-        userId: 1,
       });
 
       setTitle("");
