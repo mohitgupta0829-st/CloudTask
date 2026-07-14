@@ -1,0 +1,52 @@
+services:
+
+  postgres:
+    image: postgres:16
+    container_name: cloudtask-postgres
+
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres123
+      POSTGRES_DB: cloudtask
+
+    ports:
+      - "5432:5432"
+
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+  backend:
+    build:
+      context: ../../apps/backend
+
+    container_name: cloudtask-backend
+
+    ports:
+      - "5000:5000"
+
+    depends_on:
+      - postgres
+
+    environment:
+      PORT: 5000
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: postgres123
+      DB_NAME: cloudtask
+      JWT_SECRET: cloudtask_super_secret_key_2026
+
+  frontend:
+    build:
+      context: ../../apps/frontend
+
+    container_name: cloudtask-frontend
+
+    ports:
+      - "5173:5173"
+
+    depends_on:
+      - backend
+
+volumes:
+  postgres-data:
