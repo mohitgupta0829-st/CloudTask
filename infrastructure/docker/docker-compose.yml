@@ -1,3 +1,5 @@
+version: "3.8"
+
 services:
 
   postgres:
@@ -14,6 +16,11 @@ services:
 
     volumes:
       - postgres-data:/var/lib/postgresql/data
+    
+    restart: unless-stopped
+
+    networks:
+    - cloudtask-network
 
   backend:
     build:
@@ -35,6 +42,16 @@ services:
       DB_PASSWORD: postgres123
       DB_NAME: cloudtask
       JWT_SECRET: cloudtask_super_secret_key_2026
+      
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "http://localhost:5000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    
+    restart: unless-stopped
+    networks:
+     - cloudtask-network
 
   frontend:
     build:
@@ -43,10 +60,24 @@ services:
     container_name: cloudtask-frontend
 
     ports:
-      - "5173:5173"
+      - "5173:80"
 
     depends_on:
       - backend
 
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "http://localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+    restart: unless-stopped
+
+    networks:
+     - cloudtask-network
+
 volumes:
   postgres-data:
+
+networks:
+  cloudtask-network:
