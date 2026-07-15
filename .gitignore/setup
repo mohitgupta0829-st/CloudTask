@@ -1,0 +1,91 @@
+🏁 Docker Validation Checklist
+1. Stop your local backend/frontend
+Ctrl + C
+
+No npm run dev should be running.
+
+2. Stop local PostgreSQL
+sudo systemctl stop postgresql
+
+Verify:
+
+sudo systemctl status postgresql
+
+Expected:
+
+inactive (dead)
+3. Update .env
+
+For Docker:
+
+DB_HOST=postgres
+DB_PORT=5432
+DB_USER=postgres
+DB_PASSWORD=postgres123
+DB_NAME=cloudtask
+JWT_SECRET=cloudtask_super_secret_key_2026
+PORT=5000
+4. Check port 5432
+sudo lsof -i :5432
+
+Expected:
+
+(no output)
+
+If you still see a process:
+
+sudo kill -9 <PID>
+5. Go to Docker directory
+cd infrastructure/docker
+6. Stop old containers
+docker compose down -v
+7. Build everything again
+docker compose up --build
+
+Wait until you see:
+
+Database Connected
+Server running
+8. Check containers
+docker compose ps
+
+Expected:
+
+cloudtask-postgres
+cloudtask-backend
+cloudtask-frontend
+
+All Up.
+
+9. Test
+
+Open:
+
+http://localhost:5173
+
+Test:
+
+✅ Register
+✅ Login
+✅ Dashboard
+✅ Add Task
+✅ Complete Task
+✅ Delete Task
+10. Stop Docker
+Ctrl + C
+
+or
+
+docker compose down
+🔄 Switch Back to Local Development
+
+If you want to use npm run dev again:
+
+Start PostgreSQL
+sudo systemctl start postgresql
+Change .env
+DB_HOST=localhost
+
+Then:
+
+npm run dev
