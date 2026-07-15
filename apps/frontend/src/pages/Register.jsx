@@ -1,29 +1,29 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Button from "../components/Button/Button";
 import Input from "../components/Input/Input";
 import api from "../services/api";
-import { useNavigate } from "react-router-dom";
 
-function Login() {
+function Register() {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
   const navigate = useNavigate();
 
-  const handleLogin = async () => {
+  const handleRegister = async () => {
     try {
-      const response = await api.post("/auth/login", {
+      const response = await api.post("/auth/register", {
+        name,
         email,
         password,
       });
 
-      console.log(response.data);
+      alert(response.data.message);
+      navigate("/");
 
-      localStorage.setItem("token", response.data.token);
-      console.log(response.data.token);
-      navigate("/dashboard");
-      
     } catch (error) {
-      alert(error.response?.data?.message || "Login Failed");
+      alert(error.response?.data?.message || "Registration Failed");
     }
   };
 
@@ -39,16 +39,29 @@ function Login() {
           </div>
 
           <h1 className="text-3xl font-bold">
-            CloudTask
+            Create Account
           </h1>
 
           <p className="mt-2 text-gray-500">
-            Plan. Track. Complete.
+            Join CloudTask and start managing your work.
           </p>
 
         </div>
 
         <div className="space-y-6">
+
+          <div>
+            <label className="mb-2 block text-sm font-medium">
+              Full Name
+            </label>
+
+            <Input
+              type="text"
+              placeholder="John Doe"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+          </div>
 
           <div>
             <label className="mb-2 block text-sm font-medium">
@@ -75,33 +88,20 @@ function Login() {
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
-          <div className="flex items-center justify-between text-sm">
 
-          <label className="flex items-center gap-2 cursor-pointer">
-          <input type="checkbox" />
-            Remember me
-          </label>
-
-          <button
-            type="button"
-            className="text-[var(--primary)] hover:underline"
-          >
-            Forgot Password?
-          </button>
-
-          </div>
-
-          <Button onClick={handleLogin}>
-            Sign In
+          <Button onClick={handleRegister}>
+            Create Account
           </Button>
-          <p className="mt-6 text-center text-sm text-gray-500">
-              Don't have an account?{" "}
-          <a
-            href="/register"
-            className="font-medium text-[var(--primary)] hover:underline"
-          >
-            Register
-          </a>
+
+          <p className="text-center text-sm text-gray-500">
+            Already have an account?{" "}
+            <button
+              type="button"
+              onClick={() => navigate("/")}
+              className="font-medium text-[var(--primary)] hover:underline"
+            >
+              Login
+            </button>
           </p>
 
         </div>
@@ -112,4 +112,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default Register;
