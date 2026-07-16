@@ -60,16 +60,16 @@ services:
     container_name: cloudtask-frontend
 
     ports:
-      - "5173:80"
+      - "80:80"
 
     depends_on:
       - backend
 
     healthcheck:
-      test: ["CMD", "wget", "--spider", "http://localhost"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+     test: ["CMD", "wget", "--spider", "http://127.0.0.1"]
+     interval: 10s
+     timeout: 5s
+     retries: 5
 
     restart: unless-stopped
 
