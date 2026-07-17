@@ -30,6 +30,6 @@ jobs:
             docker compose pull
 
             echo "Building and starting containers..."
-            docker compose up -d
+            docker compose up -d --force-recreate
 
             echo "Deployment completed successfully!"
