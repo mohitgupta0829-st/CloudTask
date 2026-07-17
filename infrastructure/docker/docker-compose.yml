@@ -23,8 +23,7 @@ services:
     - cloudtask-network
 
   backend:
-    build:
-      context: ../../apps/backend
+    image: okokokmohit/cloudtask-backend:latest
 
     container_name: cloudtask-backend
 
@@ -54,8 +53,7 @@ services:
      - cloudtask-network
 
   frontend:
-    build:
-      context: ../../apps/frontend
+    image: okokokmohit/cloudtask-frontend:latest
 
     container_name: cloudtask-frontend
 
