@@ -38,3 +38,4 @@ jobs:
         tags: |
           okokokmohit/cloudtask-frontend:latest
           okokokmohit/cloudtask-frontend:${{ github.sha }}
+          
