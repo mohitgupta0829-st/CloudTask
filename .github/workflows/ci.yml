@@ -1,87 +1,39 @@
-name: CloudTask CI
+docker:
 
-on:
-  push:
-    branches:
-      - main
+  runs-on: ubuntu-latest
 
-  pull_request:
-    branches:
-      - main
+  needs:
+    - frontend
+    - backend
 
-jobs:
+  steps:
 
-  frontend:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
 
-    runs-on: ubuntu-latest
+    - name: Login to Docker Hub
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-    defaults:
-      run:
-        working-directory: apps/frontend
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
 
-    steps:
+    - name: Build and Push Backend
+      uses: docker/build-push-action@v6
+      with:
+        context: ./apps/backend
+        push: true
+        tags: |
+          okokokmohit/cloudtask-backend:latest
+          okokokmohit/cloudtask-backend:${{ github.sha }}
 
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-
-      - name: Install Dependencies
-        run: npm install
-
-      - name: Build React App
-        run: npm run build
-
-
-  backend:
-
-    runs-on: ubuntu-latest
-
-    defaults:
-      run:
-        working-directory: apps/backend
-
-    steps:
-
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-
-      - name: Install Dependencies
-        run: npm install
-
-      - name: Verify Backend
-        run: node --check src/server.js
-
-
-  docker:
-
-    runs-on: ubuntu-latest
-
-    needs:
-      - frontend
-      - backend
-
-    steps:
-
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-
-      - name: Build Backend Image
-        run: |
-          docker build \
-          -t cloudtask-backend \
-          ./apps/backend
-
-      - name: Build Frontend Image
-        run: |
-          docker build \
-          -t cloudtask-frontend \
-          ./apps/frontend
+    - name: Build and Push Frontend
+      uses: docker/build-push-action@v6
+      with:
+        context: ./apps/frontend
+        push: true
+        tags: |
+          okokokmohit/cloudtask-frontend:latest
+          okokokmohit/cloudtask-frontend:${{ github.sha }}
