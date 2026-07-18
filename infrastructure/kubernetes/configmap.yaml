@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cloudTask-config
+  namespace: cloudTask
+data:
+  port : "5000"
+  
+  DB_HOST: postgres-service
+  DB_PORT: "5432"
+  DB_NAME: cloudtask
