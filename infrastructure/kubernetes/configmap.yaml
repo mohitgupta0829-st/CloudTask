@@ -1,8 +1,8 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: cloudTask-config
-  namespace: cloudTask
+  name: cloudtask-config
+  namespace: cloudtask
 data:
   port : "5000"
   
