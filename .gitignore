@@ -63,8 +63,7 @@ Open:
 
 http://localhost:5173
 
-Test:
-
+Test:\
 ✅ Register
 ✅ Login
 ✅ Dashboard
