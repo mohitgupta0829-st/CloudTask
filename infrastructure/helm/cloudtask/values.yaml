@@ -1,0 +1,36 @@
+namespace: cloudtask
+
+frontend:
+  replicaCount: 2
+
+  image:
+    repository: okokokmohit/cloudtask-frontend
+    tag: latest
+
+  service:
+    type: ClusterIP
+    port: 80
+
+backend:
+  replicaCount: 2
+
+  image:
+    repository: okokokmohit/cloudtask-backend
+    tag: latest
+
+  service:
+    type: ClusterIP
+    port: 5000
+
+postgres:
+  image:
+    repository: postgres
+    tag: "16"
+
+  service:
+    port: 5432
+
+ingress:
+  enabled: true
+  className: nginx
+  host: cloudtask.local
